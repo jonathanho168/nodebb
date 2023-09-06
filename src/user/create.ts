@@ -33,9 +33,16 @@ type UserMethods = {
     isDataValid: (userData: any) => Promise<void>;
     isPasswordValid: (password: string, minStrength?: number) => void;
     uniqueUsername: (userData: any) => Promise<string | null>;
+    notifications: any;
+    updateDigestSetting: any;
+    email: any;
+    hashPassword: any;
+    setUserFields: any;
+    reset: any;
+    
 };
 
-module.exports = function (User : UserMethods) : void {
+export default function (User : UserMethods) : void {
     User.create = async function (data : any) : Promise<number> {
         data.username = data.username.trim();
         data.userslug = slugify(data.username);
