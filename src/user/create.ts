@@ -140,7 +140,7 @@ module.exports = function (User : any) : void {
         ]);
     }
 
-    User.isDataValid = async function (userData : any) => {
+    User.isDataValid = async function (userData : any) {
         if (userData.email && !utils.isEmailValid(userData.email)) {
             throw new Error('[[error:invalid-email]]');
         }
@@ -161,7 +161,7 @@ module.exports = function (User : any) : void {
         }
     };
 
-    User.isPasswordValid = function (password : string, minStrength? : number) {
+    User.isPasswordValid = function (password : string, minStrength : number) {
         minStrength = (minStrength || minStrength === 0) ? minStrength : meta.config.minimumPasswordStrength;
 
         // Sanity checks: Checks if defined and is string
@@ -183,7 +183,7 @@ module.exports = function (User : any) : void {
         }
     };
 
-    User.uniqueUsername = async function (userData : any) => {
+    User.uniqueUsername = async function (userData : any) {
         let numTries = 0;
         let { username } = userData;
         while (true) {
