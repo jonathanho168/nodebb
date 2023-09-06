@@ -11,8 +11,8 @@ import groups = require('../groups');
 import meta = require('../meta');
 import analytics = require('../analytics');
 
-module.exports = function (User) {
-    User.create = async function (data) {
+module.exports = function (User : any) : void {
+    User.create = async function (data : any) : Promise<number> {
         data.username = data.username.trim();
         data.userslug = slugify(data.username);
         if (data.email !== undefined) {
@@ -36,14 +36,14 @@ module.exports = function (User) {
         }
     };
 
-    async function lock(value, error) {
+    async function lock(value : string, error : string) {
         const count = await db.incrObjectField('locks', value);
         if (count > 1) {
             throw new Error(error);
         }
     }
 
-    async function create(data) {
+    async function create(data : any) : Promise<number> {
         const timestamp = data.timestamp || Date.now();
 
         let userData = {
@@ -126,7 +126,7 @@ module.exports = function (User) {
         return userData.uid;
     }
 
-    async function storePassword(uid, password) {
+    async function storePassword(uid : number, password : string) {
         if (!password) {
             return;
         }
@@ -140,7 +140,7 @@ module.exports = function (User) {
         ]);
     }
 
-    User.isDataValid = async function (userData) {
+    User.isDataValid = async function (userData : any) => {
         if (userData.email && !utils.isEmailValid(userData.email)) {
             throw new Error('[[error:invalid-email]]');
         }
@@ -161,7 +161,7 @@ module.exports = function (User) {
         }
     };
 
-    User.isPasswordValid = function (password, minStrength) {
+    User.isPasswordValid = function (password : string, minStrength? : number) {
         minStrength = (minStrength || minStrength === 0) ? minStrength : meta.config.minimumPasswordStrength;
 
         // Sanity checks: Checks if defined and is string
@@ -183,7 +183,7 @@ module.exports = function (User) {
         }
     };
 
-    User.uniqueUsername = async function (userData) {
+    User.uniqueUsername = async function (userData : any) => {
         let numTries = 0;
         let { username } = userData;
         while (true) {
