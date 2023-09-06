@@ -9,13 +9,13 @@ import groups = require('../groups');
 import meta = require('../meta');
 import analytics = require('../analytics');
 
-type UserData = {
+interface UserData {
     username: string;
     userslug: string;
-    accounttype: string;
-    email: string;
-    joindate: number | Date;
-    lastonline: number | Date;
+    accounttype?: string;
+    email?: string;
+    joindate: number;
+    lastonline: number;
     status: string;
     picture?: string;
     fullname?: string;
@@ -24,9 +24,15 @@ type UserData = {
     gdpr_consent?: number;
     acceptTos?: number;
     uid?: number;
+}
+
+interface CreationData extends Partial<UserData> {
+    timestamp?: number;
+    'account-type'?: string;
     password?: string;
-    'password:shaWrapped'?: number;
-};
+    gdpr_consent?: boolean;
+    acceptTos?: boolean;
+}
 
 type UserMethods = {
     create: (data: any) => Promise<number>;
@@ -43,7 +49,7 @@ type UserMethods = {
 };
 
 export default function (User : UserMethods) : void {
-    User.create = async function (data : any) : Promise<number> {
+    User.create = async function (data : CreationData) : Promise<number> {
         data.username = data.username.trim();
         data.userslug = slugify(data.username);
         if (data.email !== undefined) {
@@ -74,7 +80,7 @@ export default function (User : UserMethods) : void {
         }
     }
 
-    async function create(data : any) : Promise<number> {
+    async function create(data : CreationData) : Promise<number> {
         const timestamp = data.timestamp || Date.now();
 
         let userData : UserData = {
@@ -157,7 +163,7 @@ export default function (User : UserMethods) : void {
         return userData.uid;
     }
 
-    async function storePassword(uid : number, password : string) {
+    async function storePassword(uid : number, password : string): Promise<void> {
         if (!password) {
             return;
         }
@@ -171,7 +177,7 @@ export default function (User : UserMethods) : void {
         ]);
     }
 
-    User.isDataValid = async function (userData : any) {
+    User.isDataValid = async function (userData : CreationData): Promise<void> {
         if (userData.email && !utils.isEmailValid(userData.email)) {
             throw new Error('[[error:invalid-email]]');
         }
@@ -192,7 +198,7 @@ export default function (User : UserMethods) : void {
         }
     };
 
-    User.isPasswordValid = function (password : string, minStrength : number) {
+    User.isPasswordValid = function (password : string, minStrength? : number) {
         minStrength = (minStrength || minStrength === 0) ? minStrength : meta.config.minimumPasswordStrength;
 
         // Sanity checks: Checks if defined and is string
@@ -214,7 +220,7 @@ export default function (User : UserMethods) : void {
         }
     };
 
-    User.uniqueUsername = async function (userData : any) {
+    User.uniqueUsername = async function (userData : UserData): Promise<string | null> {
         let numTries = 0;
         let { username } = userData;
         while (true) {
