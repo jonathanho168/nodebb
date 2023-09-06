@@ -1,15 +1,15 @@
 'use strict';
 
-const zxcvbn = require('zxcvbn');
-const winston = require('winston');
+import zxcvbn = require('zxcvbn');
+import winston = require('winston');
 
-const db = require('../database');
-const utils = require('../utils');
-const slugify = require('../slugify');
-const plugins = require('../plugins');
-const groups = require('../groups');
-const meta = require('../meta');
-const analytics = require('../analytics');
+import db = require('../database');
+import utils = require('../utils');
+import slugify = require('../slugify');
+import plugins = require('../plugins');
+import groups = require('../groups');
+import meta = require('../meta');
+import analytics = require('../analytics');
 
 module.exports = function (User) {
     User.create = async function (data) {
