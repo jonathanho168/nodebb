@@ -23,9 +23,9 @@ type UserData = {
     fullname?: string;
     location?: string;
     birthday?: string;
-    gdpr_consent: number;
-    acceptTos: number;
-    uid: number;
+    gdpr_consent?: number;
+    acceptTos?: number;
+    uid?: number;
     password?: string;
     'password:shaWrapped'?: number;
 };
