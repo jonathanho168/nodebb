@@ -11,6 +11,26 @@ import groups = require('../groups');
 import meta = require('../meta');
 import analytics = require('../analytics');
 
+type UserData = {
+    username: string;
+    userslug: string;
+    accounttype: string;
+    email: string;
+    joindate: number | Date;
+    lastonline: number | Date;
+    status: string;
+    picture?: string;
+    fullname?: string;
+    location?: string;
+    birthday?: string;
+    gdpr_consent: number;
+    acceptTos: number;
+    uid: number;
+    password?: string;
+    'password:shaWrapped'?: number;
+};
+
+
 module.exports = function (User : any) : void {
     User.create = async function (data : any) : Promise<number> {
         data.username = data.username.trim();
@@ -46,7 +66,7 @@ module.exports = function (User : any) : void {
     async function create(data : any) : Promise<number> {
         const timestamp = data.timestamp || Date.now();
 
-        let userData = {
+        let userData : UserData = {
             username: data.username,
             userslug: data.userslug,
             accounttype: data.accounttype || 'student',
