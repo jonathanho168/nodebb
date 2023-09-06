@@ -28,8 +28,14 @@ type UserData = {
     'password:shaWrapped'?: number;
 };
 
+type UserMethods = {
+    create: (data: any) => Promise<number>;
+    isDataValid: (userData: any) => Promise<void>;
+    isPasswordValid: (password: string, minStrength?: number) => void;
+    uniqueUsername: (userData: any) => Promise<string | null>;
+};
 
-module.exports = function (User : any) : void {
+module.exports = function (User : UserMethods) : void {
     User.create = async function (data : any) : Promise<number> {
         data.username = data.username.trim();
         data.userslug = slugify(data.username);
