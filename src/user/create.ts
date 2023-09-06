@@ -21,8 +21,8 @@ interface UserData {
     fullname?: string;
     location?: string;
     birthday?: string;
-    gdpr_consent?: number;
-    acceptTos?: number;
+    gdpr_consent?: number | boolean;
+    acceptTos?: number | boolean;
     uid?: number;
 }
 
@@ -30,8 +30,6 @@ interface CreationData extends Partial<UserData> {
     timestamp?: number;
     'account-type'?: string;
     password?: string;
-    gdpr_consent?: boolean;
-    acceptTos?: boolean;
 }
 
 type UserMethods = {
