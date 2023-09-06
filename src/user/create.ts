@@ -1,5 +1,3 @@
-'use strict';
-
 import zxcvbn = require('zxcvbn');
 import winston = require('winston');
 
