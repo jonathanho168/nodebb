@@ -117,7 +117,7 @@ export default function (User : UserMethods) : void {
         const results = await plugins.hooks.fire('filter:user.create', { user: userData, data: data }) as FireResult;
         userData = results.user;
 
-        // The next line calls a function in a module that has not been updated to TS yet
+        // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const uid = await db.incrObjectField('global', 'nextUid') as number;
         const isFirstUser = uid === 1;
@@ -157,8 +157,12 @@ export default function (User : UserMethods) : void {
         }
 
         await Promise.all([
+            // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             db.incrObjectField('global', 'userCount'),
             analytics.increment('registrations'),
+            // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             db.sortedSetAddBulk(bulkAdd),
             groups.join(['registered-users', 'unverified-users'], userData.uid),
             User.notifications.sendWelcomeNotification(userData.uid),
