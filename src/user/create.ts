@@ -182,7 +182,7 @@ export default function (User : UserMethods) : void {
             await User.email.sendValidationEmail(userData.uid, {
                 email: userData.email,
                 template: 'welcome',
-                subject: `[[email:welcome-to, ${meta.config.title || meta.config.browserTitle || 'NodeBB'}]]`,
+                subject: `[[email:welcome-to, ${meta.config.title as string || meta.config.browserTitle as string || 'NodeBB'}]]`,
             }).catch(err => winston.error(`[user.create] Validation email failed to send\n[emailer.send] ${err.stack}`));
         }
         if (userNameChanged) {
