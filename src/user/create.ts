@@ -268,7 +268,7 @@ export default function (User : UserMethods) : void {
     };
 
     User.isPasswordValid = function (password : string, minStrength? : number) {
-        minStrength = (minStrength || minStrength === 0) ? minStrength : meta.config.minimumPasswordStrength;
+        minStrength = (minStrength || minStrength === 0) ? minStrength : meta.config.minimumPasswordStrength as number;
 
         // Sanity checks: Checks if defined and is string
         if (!password || !utils.isPasswordValid(password)) {
