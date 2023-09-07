@@ -158,6 +158,20 @@ export default function (User : UserMethods) : void {
             bulkAdd.push(['fullname:sorted', 0, `${userData.fullname.toLowerCase()}:${userData.uid}`]);
         }
 
+        async function storePassword(uid : number, password : string): Promise<void> {
+            if (!password) {
+                return;
+            }
+            const hash = await User.hashPassword(password);
+            await Promise.all([
+                User.setUserFields(uid, {
+                    password: hash,
+                    'password:shaWrapped': 1,
+                }),
+                User.reset.updateExpiry(uid),
+            ]);
+        }
+
         await Promise.all([
             db.incrObjectField('global', 'userCount'),
             analytics.increment('registrations'),
@@ -165,7 +179,7 @@ export default function (User : UserMethods) : void {
             groups.join(['registered-users', 'unverified-users'], userData.uid),
             User.notifications.sendWelcomeNotification(userData.uid),
             storePassword(userData.uid, data.password),
-            User.updateDigestSetting(userData.uid, meta.config.dailyDigestFreq)
+            User.updateDigestSetting(userData.uid, meta.config.dailyDigestFreq),
         ]);
 
         if (userData.email && isFirstUser) {
@@ -176,7 +190,7 @@ export default function (User : UserMethods) : void {
             await User.email.sendValidationEmail(userData.uid, {
                 email: userData.email,
                 template: 'welcome',
-                subject: `[[email:welcome-to, ${meta.config.title || meta.config.browserTitle || 'NodeBB'}]]`
+                subject: `[[email:welcome-to, ${meta.config.title || meta.config.browserTitle || 'NodeBB'}]]`,
             }).catch(err => winston.error(`[user.create] Validation email failed to send\n[emailer.send] ${err.stack}`));
         }
         if (userNameChanged) {
@@ -184,20 +198,6 @@ export default function (User : UserMethods) : void {
         }
         plugins.hooks.fire('action:user.create', { user: userData, data: data });
         return userData.uid;
-    }
-
-    async function storePassword(uid : number, password : string): Promise<void> {
-        if (!password) {
-            return;
-        }
-        const hash = await User.hashPassword(password);
-        await Promise.all([
-            User.setUserFields(uid, {
-                password: hash,
-                'password:shaWrapped': 1,
-            }),
-            User.reset.updateExpiry(uid),
-        ]);
     }
 
     User.isDataValid = async function (userData : CreationData): Promise<void> {
