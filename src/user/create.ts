@@ -171,7 +171,7 @@ export default function (User : UserMethods) : void {
             storePassword(userData.uid, data.password),
             // The next line calls a function in a module that has not been updated to TS yet: groups.join
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            User.updateDigestSetting(Number(userData.uid), meta.config.dailyDigestFreq),
+            User.updateDigestSetting(Number(userData.uid), meta.config.dailyDigestFreq as DigestConfig),
         ]);
 
         if (userData.email && isFirstUser) {
