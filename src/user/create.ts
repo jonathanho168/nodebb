@@ -69,6 +69,10 @@ type UserMethods = {
     reset: ResetMethods;
 };
 
+type FireResult = {
+    user: UserData;
+}
+
 export default function (User : UserMethods) : void {
     async function lock(value : string, error : string) {
         // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
@@ -110,9 +114,7 @@ export default function (User : UserMethods) : void {
             userData.userslug = String(slugify(renamedUsername));
         }
 
-        // The next line calls a function in a module that has not been updated to TS yet
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        const results = await plugins.hooks.fire('filter:user.create', { user: userData, data: data });
+        const results = await plugins.hooks.fire('filter:user.create', { user: userData, data: data }) as FireResult;
         userData = results.user;
 
         const uid = await db.incrObjectField('global', 'nextUid');
