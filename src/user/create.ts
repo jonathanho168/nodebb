@@ -282,7 +282,7 @@ export default function (User : UserMethods) : void {
         }
 
         // https://github.com/dropbox/zxcvbn
-        const strength = zxcvbn(password) as ZxcvbnResult;
+        const strength = zxcvbn(String(password)) as ZxcvbnResult;
 
         if (strength.score < minStrength) {
             throw new Error('[[user:weak_password]]');
