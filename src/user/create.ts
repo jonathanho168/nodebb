@@ -34,13 +34,13 @@ interface CreationData extends Partial<UserData> {
 
 type Notifications = {
     sendWelcomeNotification: (uid: number) => Promise<void>;
-    sendNameChangeNotification: any;
+    sendNameChangeNotification: (uid: number, newUsername: string) => Promise<void>;
 };
 
 type EmailMethods = {
     confirmByUid: (uid: number) => Promise<void>;
     sendValidationEmail: (uid: number, details: { email: string; template: string; subject: string }) => Promise<void>;
-    available: any;
+    available: (email: string) => Promise<boolean>;
 
 };
 
