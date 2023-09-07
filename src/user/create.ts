@@ -9,6 +9,31 @@ import groups = require('../groups');
 import meta = require('../meta');
 import analytics = require('../analytics');
 
+type ZxcvbnResult = {
+    guesses: number;
+    guesses_log10: number;
+    crack_times_seconds: {
+        online_throttling_100_per_hour: number;
+        online_no_throttling_10_per_second: number;
+        offline_slow_hashing_1e4_per_second: number;
+        offline_fast_hashing_1e10_per_second: number;
+    };
+    crack_times_display: {
+        online_throttling_100_per_hour: string;
+        online_no_throttling_10_per_second: string;
+        offline_slow_hashing_1e4_per_second: string;
+        offline_fast_hashing_1e10_per_second: string;
+    };
+    score: 0 | 1 | 2 | 3 | 4;
+    feedback: {
+        warning: string;
+        suggestions: string[];
+    };
+    sequence: string[];
+    calc_time: number;
+};
+
+
 interface UserData {
     username: string;
     userslug: string;
@@ -256,7 +281,9 @@ export default function (User : UserMethods) : void {
             throw new Error('[[error:password-too-long]]');
         }
 
-        const strength = zxcvbn(password);
+        // https://github.com/dropbox/zxcvbn
+        const strength = zxcvbn(password) as ZxcvbnResult;
+
         if (strength.score < minStrength) {
             throw new Error('[[user:weak_password]]');
         }
