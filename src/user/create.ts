@@ -161,15 +161,15 @@ export default function (User : UserMethods) : void {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             db.incrObjectField('global', 'userCount'),
             analytics.increment('registrations'),
-            // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
+            // The next line calls a function in a module that has not been updated to TS yet: db.sortedSetAddBulk
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             db.sortedSetAddBulk(bulkAdd),
-            // The next line calls a function in a module that has not been updated to TS yet: groups.join
+            // The next line calls a function in a module that has not been updated to TS yet
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             groups.join(['registered-users', 'unverified-users'], userData.uid) as void,
             User.notifications.sendWelcomeNotification(userData.uid),
             storePassword(userData.uid, data.password),
-            // The next line calls a function in a module that has not been updated to TS yet: groups.join
+            // The next line calls a function in a module that has not been updated to TS yet
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             User.updateDigestSetting(Number(userData.uid), meta.config.dailyDigestFreq as DigestConfig),
         ]);
@@ -182,6 +182,9 @@ export default function (User : UserMethods) : void {
             await User.email.sendValidationEmail(userData.uid, {
                 email: userData.email,
                 template: 'welcome',
+                // The next line calls a function in a module that has not been updated to TS yet:
+                // meta.config has no type constraints
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 subject: `[[email:welcome-to, ${meta.config.title as string || meta.config.browserTitle as string || 'NodeBB'}]]`,
             }).catch(err => winston.error(`[user.create] Validation email failed to send\n[emailer.send] ${err.stack}`));
         }
@@ -264,7 +267,7 @@ export default function (User : UserMethods) : void {
         let { username } = userData;
         while (true) {
             /* eslint-disable no-await-in-loop */
-            const exists = await meta.userOrGroupExists(username);
+            const exists = await meta.userOrGroupExists(username) as boolean;
             if (!exists) {
                 return numTries ? username : null;
             }
