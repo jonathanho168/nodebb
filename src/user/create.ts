@@ -268,7 +268,7 @@ export default function (User : UserMethods) : void {
     };
 
     User.isPasswordValid = function (password : string, minStrength? : number) {
-        // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
+        // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         minStrength = (minStrength || minStrength === 0) ? minStrength : meta.config.minimumPasswordStrength as number;
 
@@ -277,7 +277,7 @@ export default function (User : UserMethods) : void {
             throw new Error('[[error:invalid-password]]');
         }
 
-        // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
+        // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         if (password.length < meta.config.minimumPasswordLength) {
             throw new Error('[[reset_password:password_too_short]]');
@@ -288,6 +288,8 @@ export default function (User : UserMethods) : void {
         }
 
         // https://github.com/dropbox/zxcvbn
+        // The next line calls a function in a module that has not been updated to TS yet
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const strength = zxcvbn(String(password)) as ZxcvbnResult;
 
         if (strength.score < minStrength) {
