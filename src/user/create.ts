@@ -107,7 +107,7 @@ export default function (User : UserMethods) : void {
         const userNameChanged = !!renamedUsername;
         if (userNameChanged) {
             userData.username = renamedUsername;
-            userData.userslug = slugify(renamedUsername);
+            userData.userslug = String(slugify(renamedUsername));
         }
 
         const results = await plugins.hooks.fire('filter:user.create', { user: userData, data: data });
