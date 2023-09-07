@@ -71,8 +71,8 @@ type UserMethods = {
 
 export default function (User : UserMethods) : void {
     User.create = async function (data : CreationData) : Promise<number> {
-        data.username = data.username.trim();
-        data.userslug = slugify(data.username);
+        data.username: string = data.username.trim();
+        data.userslug: string = slugify(data.username);
         if (data.email !== undefined) {
             data.email = String(data.email).trim();
         }
@@ -111,7 +111,7 @@ export default function (User : UserMethods) : void {
             email: data.email || '',
             joindate: timestamp,
             lastonline: timestamp,
-            status: 'online',
+            status: 'online'
         };
         ['picture', 'fullname', 'location', 'birthday'].forEach((field) => {
             if (data[field]) {
@@ -149,7 +149,7 @@ export default function (User : UserMethods) : void {
             ['users:joindate', timestamp, userData.uid],
             ['users:online', timestamp, userData.uid],
             ['users:postcount', 0, userData.uid],
-            ['users:reputation', 0, userData.uid],
+            ['users:reputation', 0, userData.uid]
         ];
 
         if (userData.fullname) {
@@ -163,7 +163,7 @@ export default function (User : UserMethods) : void {
             groups.join(['registered-users', 'unverified-users'], userData.uid),
             User.notifications.sendWelcomeNotification(userData.uid),
             storePassword(userData.uid, data.password),
-            User.updateDigestSetting(userData.uid, meta.config.dailyDigestFreq),
+            User.updateDigestSetting(userData.uid, meta.config.dailyDigestFreq)
         ]);
 
         if (userData.email && isFirstUser) {
@@ -174,7 +174,7 @@ export default function (User : UserMethods) : void {
             await User.email.sendValidationEmail(userData.uid, {
                 email: userData.email,
                 template: 'welcome',
-                subject: `[[email:welcome-to, ${meta.config.title || meta.config.browserTitle || 'NodeBB'}]]`,
+                subject: `[[email:welcome-to, ${meta.config.title || meta.config.browserTitle || 'NodeBB'}]]`
             }).catch(err => winston.error(`[user.create] Validation email failed to send\n[emailer.send] ${err.stack}`));
         }
         if (userNameChanged) {
