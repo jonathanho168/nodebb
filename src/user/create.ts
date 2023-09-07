@@ -79,8 +79,8 @@ export default function (User : UserMethods) : void {
     }
 
     User.create = async function (data : CreationData) : Promise<number> {
-        data.username: string = data.username.trim();
-        data.userslug: string = slugify(data.username);
+        data.username = data.username.trim();
+        data.userslug = String(slugify(data.username));
         if (data.email !== undefined) {
             data.email = String(data.email).trim();
         }
