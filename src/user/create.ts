@@ -70,6 +70,14 @@ type UserMethods = {
 };
 
 export default function (User : UserMethods) : void {
+
+    async function lock(value : string, error : string) {
+        const count = await db.incrObjectField('locks', value);
+        if (count > 1) {
+            throw new Error(error);
+        }
+    }
+
     User.create = async function (data : CreationData) : Promise<number> {
         data.username: string = data.username.trim();
         data.userslug: string = slugify(data.username);
@@ -94,12 +102,7 @@ export default function (User : UserMethods) : void {
         }
     };
 
-    async function lock(value : string, error : string) {
-        const count = await db.incrObjectField('locks', value);
-        if (count > 1) {
-            throw new Error(error);
-        }
-    }
+
 
     async function create(data : CreationData) : Promise<number> {
         const timestamp = data.timestamp || Date.now();
