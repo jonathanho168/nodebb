@@ -226,7 +226,7 @@ export default function (User : UserMethods) : void {
         if (userNameChanged) {
             await User.notifications.sendNameChangeNotification(userData.uid, userData.username);
         }
-        plugins.hooks.fire('action:user.create', { user: userData, data: data });
+        await plugins.hooks.fire('action:user.create', { user: userData, data: data });
         return userData.uid;
     }
 
