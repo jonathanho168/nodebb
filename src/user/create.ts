@@ -34,17 +34,28 @@ interface CreationData extends Partial<UserData> {
 
 type Notifications = {
     sendWelcomeNotification: (uid: number) => Promise<void>;
+    sendNameChangeNotification: any;
 };
 
 type EmailMethods = {
     confirmByUid: (uid: number) => Promise<void>;
     sendValidationEmail: (uid: number, details: { email: string; template: string; subject: string }) => Promise<void>;
+    available: any;
+
 };
 
 type ResetMethods = {
     updateExpiry: (uid: number) => Promise<void>;
 };
 
+type UserFields = {
+    password?: string;
+    'password:shaWrapped'?: number;
+}
+
+type DigestConfig = {
+    frequency: string;
+}
 
 type UserMethods = {
     create: (data: CreationData) => Promise<number>;
@@ -52,10 +63,10 @@ type UserMethods = {
     isPasswordValid: (password: string, minStrength?: number) => void;
     uniqueUsername: (userData: UserData) => Promise<string | null>;
     notifications: Notifications;
-    updateDigestSetting: (uid: number, config: any) => Promise<void>;
+    updateDigestSetting: (uid: number, config: DigestConfig) => Promise<void>;
     email: EmailMethods;
     hashPassword: (password: string) => Promise<string>;
-    setUserFields: (uid: number, fields: any) => Promise<void>;
+    setUserFields: (uid: number, fields: UserFields) => Promise<void>;
     reset: ResetMethods;
     
 };
