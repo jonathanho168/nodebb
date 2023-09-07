@@ -68,7 +68,6 @@ type UserMethods = {
     hashPassword: (password: string) => Promise<string>;
     setUserFields: (uid: number, fields: UserFields) => Promise<void>;
     reset: ResetMethods;
-    
 };
 
 export default function (User : UserMethods) : void {
@@ -256,4 +255,4 @@ export default function (User : UserMethods) : void {
             numTries += 1;
         }
     };
-};
+}
