@@ -98,6 +98,10 @@ type FireResult = {
     user: UserData;
 }
 
+type Error = {
+    stack: string;
+}
+
 export default function (User : UserMethods) : void {
     async function lock(value : string, error : string) {
         // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
@@ -211,7 +215,13 @@ export default function (User : UserMethods) : void {
                 // meta.config has no type constraints
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 subject: `[[email:welcome-to, ${meta.config.title as string || meta.config.browserTitle as string || 'NodeBB'}]]`,
-            }).catch(err => winston.error(`[user.create] Validation email failed to send\n[emailer.send] ${err.stack}`));
+            // The next line calls a function in a module that has not been updated to TS yet
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            }).catch(err => {
+                if (err instanceof Error) {
+                    winston.error(`[user.create] Validation email failed to send\n[emailer.send] ${err.stack}`);
+                }
+            });
         }
         if (userNameChanged) {
             await User.notifications.sendNameChangeNotification(userData.uid, userData.username);
