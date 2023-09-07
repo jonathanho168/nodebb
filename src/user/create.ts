@@ -93,7 +93,7 @@ export default function (User : UserMethods) : void {
         };
         ['picture', 'fullname', 'location', 'birthday'].forEach((field) => {
             if (data[field]) {
-                userData[field] = data[field];
+                userData[field] = String(data[field]);
             }
         });
         if (data.gdpr_consent === true) {
