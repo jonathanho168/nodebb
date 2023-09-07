@@ -164,7 +164,9 @@ export default function (User : UserMethods) : void {
             // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             db.sortedSetAddBulk(bulkAdd),
-            groups.join(['registered-users', 'unverified-users'], userData.uid),
+            // The next line calls a function in a module that has not been updated to TS yet: groups.join
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            groups.join(['registered-users', 'unverified-users'], userData.uid) as void,
             User.notifications.sendWelcomeNotification(userData.uid),
             storePassword(userData.uid, data.password),
             User.updateDigestSetting(userData.uid, meta.config.dailyDigestFreq),
