@@ -117,7 +117,9 @@ export default function (User : UserMethods) : void {
         const results = await plugins.hooks.fire('filter:user.create', { user: userData, data: data }) as FireResult;
         userData = results.user;
 
-        const uid = await db.incrObjectField('global', 'nextUid');
+        // The next line calls a function in a module that has not been updated to TS yet
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        const uid = await db.incrObjectField('global', 'nextUid') as number;
         const isFirstUser = uid === 1;
         userData.uid = uid;
 
