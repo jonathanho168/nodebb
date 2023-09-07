@@ -240,6 +240,8 @@ export default function (User : UserMethods) : void {
         try {
             return await create(data);
         } finally {
+            // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             await db.deleteObjectFields('locks', [data.username, data.email]);
         }
     };
