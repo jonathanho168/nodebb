@@ -71,37 +71,13 @@ type UserMethods = {
 
 export default function (User : UserMethods) : void {
     async function lock(value : string, error : string) {
+        // The next line calls a function in a module that has not been updated to TS yet: db.incrObjectField
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const count = Number(await db.incrObjectField('locks', value));
         if (count > 1) {
             throw new Error(error);
         }
     }
-
-    User.create = async function (data : CreationData) : Promise<number> {
-        data.username = data.username.trim();
-        data.userslug = String(slugify(data.username));
-        if (data.email !== undefined) {
-            data.email = String(data.email).trim();
-        }
-        if (data['account-type'] !== undefined) {
-            data.accounttype = data['account-type'].trim();
-        }
-
-        await User.isDataValid(data);
-
-        await lock(data.username, '[[error:username-taken]]');
-        if (data.email && data.email !== data.username) {
-            await lock(data.email, '[[error:email-taken]]');
-        }
-
-        try {
-            return await create(data);
-        } finally {
-            await db.deleteObjectFields('locks', [data.username, data.email]);
-        }
-    };
-
-
 
     async function create(data : CreationData) : Promise<number> {
         const timestamp = data.timestamp || Date.now();
@@ -199,6 +175,30 @@ export default function (User : UserMethods) : void {
         plugins.hooks.fire('action:user.create', { user: userData, data: data });
         return userData.uid;
     }
+
+    User.create = async function (data : CreationData) : Promise<number> {
+        data.username = data.username.trim();
+        data.userslug = String(slugify(data.username));
+        if (data.email !== undefined) {
+            data.email = String(data.email).trim();
+        }
+        if (data['account-type'] !== undefined) {
+            data.accounttype = data['account-type'].trim();
+        }
+
+        await User.isDataValid(data);
+
+        await lock(data.username, '[[error:username-taken]]');
+        if (data.email && data.email !== data.username) {
+            await lock(data.email, '[[error:email-taken]]');
+        }
+
+        try {
+            return await create(data);
+        } finally {
+            await db.deleteObjectFields('locks', [data.username, data.email]);
+        }
+    };
 
     User.isDataValid = async function (userData : CreationData): Promise<void> {
         if (userData.email && !utils.isEmailValid(userData.email)) {
