@@ -41,7 +41,6 @@ type EmailMethods = {
     confirmByUid: (uid: number) => Promise<void>;
     sendValidationEmail: (uid: number, details: { email: string; template: string; subject: string }) => Promise<void>;
     available: (email: string) => Promise<boolean>;
-
 };
 
 type ResetMethods = {
