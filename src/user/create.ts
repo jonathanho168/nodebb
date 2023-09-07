@@ -123,7 +123,9 @@ export default function (User : UserMethods) : void {
         const isFirstUser = uid === 1;
         userData.uid = uid;
 
-        await db.setObject(`user:${uid}`, userData);
+        // The next line calls a function in a module that has not been updated to TS yet: db.setObject
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        await db.setObject(`user:${uid}`, userData) as Promise<void>;
 
         const bulkAdd = [
             ['username:uid', userData.uid, userData.username],
