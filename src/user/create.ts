@@ -113,7 +113,7 @@ export default function (User : UserMethods) : void {
             email: data.email || '',
             joindate: timestamp,
             lastonline: timestamp,
-            status: 'online'
+            status: 'online',
         };
         ['picture', 'fullname', 'location', 'birthday'].forEach((field) => {
             if (data[field]) {
@@ -151,7 +151,7 @@ export default function (User : UserMethods) : void {
             ['users:joindate', timestamp, userData.uid],
             ['users:online', timestamp, userData.uid],
             ['users:postcount', 0, userData.uid],
-            ['users:reputation', 0, userData.uid]
+            ['users:reputation', 0, userData.uid],
         ];
 
         if (userData.fullname) {
