@@ -70,9 +70,8 @@ type UserMethods = {
 };
 
 export default function (User : UserMethods) : void {
-
     async function lock(value : string, error : string) {
-        const count = await db.incrObjectField('locks', value);
+        const count = Number(await db.incrObjectField('locks', value));
         if (count > 1) {
             throw new Error(error);
         }
